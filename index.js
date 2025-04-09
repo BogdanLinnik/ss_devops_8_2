@@ -4,7 +4,7 @@ const sqlite3 = require("sqlite3").verbose();
 const cors = require("cors");
 require("dotenv").config();
 
-//Cnfigure ports
+// Configure ports
 const args = process.argv;
 const p_index = args.indexOf("--p");
 const cp_index = args.indexOf("--cp");
@@ -23,15 +23,11 @@ app.use(
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-});
-
 const db = new sqlite3.Database("softserve.db", (err) => {
   if (err) {
     console.error(err.message);
   }
-  console.log("Connected to  database.");
+  console.log("Connected to database.");
 });
 
 // CREATE
@@ -130,3 +126,12 @@ app.delete("/products/:id", (req, res) => {
     });
   });
 });
+
+// Only start the server if this file is run directly
+if (require.main === module) {
+  const server = app.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}`);
+  });
+}
+
+module.exports = { app, db };
